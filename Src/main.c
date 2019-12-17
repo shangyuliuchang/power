@@ -106,6 +106,7 @@ int main(void)
 	pid_init(1,0.1f,0.0f,0.0f,0.0f,50.0f);
 	
 	HAL_ADC_Start_DMA(&hadc1,adcData,4);
+	HAL_Delay(500);
 	HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
 
