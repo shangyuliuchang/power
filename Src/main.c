@@ -21,6 +21,7 @@
 /* Includes ------------------------------------------------------------------*/
 #include "main.h"
 #include "adc.h"
+#include "dma.h"
 #include "tim.h"
 #include "gpio.h"
 
@@ -58,7 +59,14 @@ void SystemClock_Config(void);
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+int cap_volt;
+int cap_volt_exp=1900;
+int out_volt;
+int out_volt_exp=2000;
+int cap_rate;
+int out_rate;
 
+uint32_t adcData[3];
 /* USER CODE END 0 */
 
 /**
@@ -68,7 +76,7 @@ void SystemClock_Config(void);
 int main(void)
 {
   /* USER CODE BEGIN 1 */
-
+	
   /* USER CODE END 1 */
   
 
@@ -90,10 +98,15 @@ int main(void)
 
   /* Initialize all configured peripherals */
   MX_GPIO_Init();
+  MX_DMA_Init();
   MX_ADC1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-
+	pid_init(0,0.1f,0.0f,0.0f,0.0f,50.0f);
+	pid_init(1,0.1f,0.0f,0.0f,0.0f,50.0f);
+	
+	HAL_ADC_Start_DMA(&hadc1,adcData,3);
+	HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
 
   /* Infinite loop */
@@ -144,7 +157,7 @@ void SystemClock_Config(void)
     Error_Handler();
   }
   PeriphClkInit.PeriphClockSelection = RCC_PERIPHCLK_ADC;
-  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV6;
+  PeriphClkInit.AdcClockSelection = RCC_ADCPCLK2_DIV8;
   if (HAL_RCCEx_PeriphCLKConfig(&PeriphClkInit) != HAL_OK)
   {
     Error_Handler();

@@ -52,11 +52,20 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
+#define CAP_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_SET)
+#define CAP_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_RESET)
+#define OUTA_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET)
+#define OUTA_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET)
+#define OUTB_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET)
+#define OUTB_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET)
 
+int cnt=0;
+int turn=0;
 /* USER CODE END 0 */
 
 /* External variables --------------------------------------------------------*/
-
+extern DMA_HandleTypeDef hdma_adc1;
+extern TIM_HandleTypeDef htim3;
 /* USER CODE BEGIN EV */
 
 /* USER CODE END EV */
@@ -196,6 +205,57 @@ void SysTick_Handler(void)
 /* For the available peripheral interrupt handler names,                      */
 /* please refer to the startup file (startup_stm32f1xx.s).                    */
 /******************************************************************************/
+
+/**
+  * @brief This function handles DMA1 channel1 global interrupt.
+  */
+void DMA1_Channel1_IRQHandler(void)
+{
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
+	cap_volt=adcData[0];
+	out_volt=adcData[1];
+  /* USER CODE END DMA1_Channel1_IRQn 0 */
+  HAL_DMA_IRQHandler(&hdma_adc1);
+  /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
+
+  /* USER CODE END DMA1_Channel1_IRQn 1 */
+}
+
+/**
+  * @brief This function handles TIM3 global interrupt.
+  */
+void TIM3_IRQHandler(void)
+{
+  /* USER CODE BEGIN TIM3_IRQn 0 */
+	cnt=(cnt+1)%100;
+	if(cnt==0){
+		turn=1-turn;
+		cap_rate=(int)(pid_caculate(0,cap_volt_exp,cap_volt));
+		out_rate=(int)(pid_caculate(1,out_volt_exp,out_volt));
+	}
+	if(cap_rate>cnt){
+		CAP_HIGH;
+	}else{
+		CAP_LOW;
+	}
+	if(out_rate>cnt){
+		if(turn==0){
+			OUTA_HIGH;
+			OUTB_LOW;
+		}else{
+			OUTB_HIGH;
+			OUTA_LOW;
+		}
+	}else{
+		OUTA_LOW;
+		OUTB_LOW;
+	}
+  /* USER CODE END TIM3_IRQn 0 */
+  HAL_TIM_IRQHandler(&htim3);
+  /* USER CODE BEGIN TIM3_IRQn 1 */
+
+  /* USER CODE END TIM3_IRQn 1 */
+}
 
 /* USER CODE BEGIN 1 */
 

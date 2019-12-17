@@ -32,7 +32,7 @@ extern "C" {
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-
+#include "pid.h" 
 /* USER CODE END Includes */
 
 /* Exported types ------------------------------------------------------------*/
@@ -59,7 +59,14 @@ void Error_Handler(void);
 
 /* Private defines -----------------------------------------------------------*/
 /* USER CODE BEGIN Private defines */
+extern int cap_volt;
+extern int cap_volt_exp;
+extern int out_volt;
+extern int out_volt_exp;
+extern int cap_rate;
+extern int out_rate;
 
+extern uint32_t adcData[3];
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus
