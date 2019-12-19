@@ -65,8 +65,8 @@ extern int out_volt;
 extern int out_volt_exp;
 extern int cap_rate;
 extern int out_rate;
-
-extern uint32_t adcData[4];
+extern int pow_volt;
+extern uint32_t adcData[40];
 /* USER CODE END Private defines */
 
 #ifdef __cplusplus

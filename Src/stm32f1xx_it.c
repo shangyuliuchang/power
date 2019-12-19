@@ -212,8 +212,7 @@ void SysTick_Handler(void)
 void DMA1_Channel1_IRQHandler(void)
 {
   /* USER CODE BEGIN DMA1_Channel1_IRQn 0 */
-	cap_volt=adcData[0];
-	out_volt=adcData[1];
+	
   /* USER CODE END DMA1_Channel1_IRQn 0 */
   HAL_DMA_IRQHandler(&hdma_adc1);
   /* USER CODE BEGIN DMA1_Channel1_IRQn 1 */
@@ -230,6 +229,21 @@ void TIM3_IRQHandler(void)
 	cnt=(cnt+1)%100;
 	if(cnt==0){
 		turn=1-turn;
+		cap_volt=0;
+		for(int i=0;i<10;i++){
+			cap_volt+=adcData[i*4];
+		}
+		cap_volt/=10;
+		out_volt=0;
+		for(int i=0;i<10;i++){
+			out_volt+=adcData[i*4+1];
+		}
+		out_volt/=10;
+		pow_volt=0;
+		for(int i=0;i<10;i++){
+			pow_volt+=adcData[i*4+2];
+		}
+		pow_volt/=10;
 		cap_rate=(int)(pid_caculate(0,cap_volt_exp,cap_volt));
 		out_rate=(int)(pid_caculate(1,out_volt_exp,out_volt));
 	}

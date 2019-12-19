@@ -65,8 +65,9 @@ int out_volt;
 int out_volt_exp=2000;
 int cap_rate;
 int out_rate;
+int pow_volt;
 
-uint32_t adcData[4];
+uint32_t adcData[40];
 /* USER CODE END 0 */
 
 /**
@@ -105,7 +106,7 @@ int main(void)
 	pid_init(0,0.1f,0.0f,0.0f,0.0f,50.0f);
 	pid_init(1,0.1f,0.0f,0.0f,0.0f,50.0f);
 	
-	HAL_ADC_Start_DMA(&hadc1,adcData,4);
+	HAL_ADC_Start_DMA(&hadc1,adcData,40);
 	HAL_Delay(500);
 	HAL_TIM_Base_Start_IT(&htim3);
   /* USER CODE END 2 */
