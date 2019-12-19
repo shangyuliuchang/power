@@ -66,6 +66,9 @@ int out_volt_exp=2000;
 int cap_rate;
 int out_rate;
 int pow_volt;
+int pow_volt_tmp;
+int cap_volt_tmp;
+int out_volt_tmp;
 
 uint32_t adcData[40];
 /* USER CODE END 0 */

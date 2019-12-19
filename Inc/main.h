@@ -66,6 +66,9 @@ extern int out_volt_exp;
 extern int cap_rate;
 extern int out_rate;
 extern int pow_volt;
+extern int pow_volt_tmp;
+extern int cap_volt_tmp;
+extern int out_volt_tmp;
 extern uint32_t adcData[40];
 /* USER CODE END Private defines */
 
