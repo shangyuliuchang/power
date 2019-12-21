@@ -69,7 +69,6 @@ int pow_volt;
 int pow_volt_tmp;
 int cap_volt_tmp;
 int out_volt_tmp;
-
 uint32_t adcData[40];
 /* USER CODE END 0 */
 
@@ -106,12 +105,13 @@ int main(void)
   MX_ADC1_Init();
   MX_TIM3_Init();
   /* USER CODE BEGIN 2 */
-	pid_init(0,0.1f,0.0f,0.0f,0.0f,50.0f);
-	pid_init(1,0.1f,0.0f,0.0f,0.0f,50.0f);
+	pid_init(0,0.01f,0.0f,0.0f,0.0f,2.0f);
+	pid_init(1,0.1f,0.0f,0.0f,0.0f,5.0f);
 	
 	HAL_ADC_Start_DMA(&hadc1,adcData,40);
 	HAL_Delay(500);
 	HAL_TIM_Base_Start_IT(&htim3);
+	HAL_GPIO_WritePin(GPIOC,GPIO_PIN_13,GPIO_PIN_SET);
   /* USER CODE END 2 */
 
   /* Infinite loop */

@@ -52,12 +52,16 @@
 
 /* Private user code ---------------------------------------------------------*/
 /* USER CODE BEGIN 0 */
-#define CAP_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET)
-#define CAP_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET)
-#define OUTA_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_SET)
-#define OUTA_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_RESET)
-#define OUTB_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET)
-#define OUTB_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET)
+#define UP_A 1
+#define UP_B 1
+#define CHARGE 0
+
+#define CAP_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_RESET)
+#define CAP_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_4,GPIO_PIN_SET)
+#define OUTA_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_RESET)
+#define OUTA_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_3,GPIO_PIN_SET)
+#define OUTB_HIGH HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_RESET)
+#define OUTB_LOW HAL_GPIO_WritePin(GPIOA,GPIO_PIN_5,GPIO_PIN_SET)
 
 int cnt=0;
 int turn=0;
@@ -226,7 +230,7 @@ void DMA1_Channel1_IRQHandler(void)
 void TIM3_IRQHandler(void)
 {
   /* USER CODE BEGIN TIM3_IRQn 0 */
-	cnt=(cnt+1)%100;
+	cnt=(cnt+1)%10;
 	if(cnt==0){
 		turn=1-turn;
 		cap_volt_tmp=0;
@@ -248,16 +252,28 @@ void TIM3_IRQHandler(void)
 		out_rate=(int)(pid_caculate(1,out_volt_exp,out_volt));
 	}
 	if(cap_rate>cnt){
-		CAP_HIGH;
+		if(CHARGE){
+			CAP_HIGH;
+		}else{
+			CAP_LOW;
+		}
 	}else{
 		CAP_LOW;
 	}
 	if(out_rate>cnt){
 		if(turn==0){
-			OUTA_HIGH;
+			if(UP_A){
+				OUTA_HIGH;
+			}else{
+				OUTA_LOW;
+			}
 			OUTB_LOW;
 		}else{
-			OUTB_HIGH;
+			if(UP_B){
+				OUTB_HIGH;
+			}else{
+				OUTB_LOW;
+			}
 			OUTA_LOW;
 		}
 	}else{
