@@ -62,7 +62,7 @@ void SystemClock_Config(void);
 int cap_volt;
 int cap_volt_exp=1900;
 int out_volt;
-int out_volt_exp=2000;
+int out_volt_exp=2400;
 int cap_rate;
 int out_rate;
 int pow_volt;
